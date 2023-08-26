@@ -32,11 +32,12 @@ const userSchema = new mongoose.Schema({
   },
 }, { versionKey: false });
 
-/** добавим метод findUserByCredentials схеме
- * у него 2 параметра — почта и пароль */
+/** добавить метод findUserByCredentials схеме
+ * у него 2 @params — почта и пароль */
 userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   // ToDo: 1)пытаемся найти user(-а) по почте
-  return this.findOne({ email }).select('+password') // this — это модель User
+  return this.findOne({ email })
+    .select('+password') // this — модель User
     .then((user) => {
       // user не нашёлся — отклоняем промис
       if (!user) {
@@ -48,7 +49,7 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
           if (!matched) {
             return Promise.reject(new AuthoErr('Неправильные почта или пароль***'));
           }
-          return user; /** теперь user доступен */
+          return user; // теперь user доступен
         });
     });
 };
