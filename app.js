@@ -4,7 +4,7 @@ require('dotenv').config(); // чтение env-переменных из .env-�
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const errorsHandler = require('./middlewares/errors-handler');
-const router = require('./routes');
+const routes = require('./routes');
 // const usersRouter = require('./routes/users');
 // const { PORT } = require('./config');
 // const usersRouter = require('./routes/users');
@@ -12,6 +12,9 @@ const router = require('./routes');
 const app = express();
 // app.use(express.json());
 
+app.use(bodyParser.json()); // parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -22,33 +25,29 @@ mongoose.connect(process.env.MONGO_URL, {
 
 // * 2.
 // app.use('/users', require('./models/user'));
-app.use(router);
-
-app.use(bodyParser.json()); // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan('dev'));
+app.use(routes);
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');
 // });
-app.get('/crash-test', () => { // Краш-тест сервера
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
+
+// app.get('/crash-test', () => { // Краш-тест сервера
+//   setTimeout(() => {
+//     throw new Error('Сервер сейчас упадёт');
+//   }, 0);
+// });
 
 // app.use('/users', usersRouter); // запросы в корень матчим с путями которые в роуте юзеров
-
-app.use((error, req, res, next) => {
-  res.status(error.status || 500);
-  res.json({
-    error: {
-      message: error.message,
-    },
-  });
-  next();
-});
 app.use(errorsHandler);
+// app.use((error, req, res, next) => {
+//   res.status(error.status || 500);
+//   res.json({
+//     error: {
+//       message: error.message,
+//     },
+//   });
+//   next();
+// });
 
 app.listen(process.env.PORT, () => {
   console.log(`this app listening on port: ${process.env.PORT}`);

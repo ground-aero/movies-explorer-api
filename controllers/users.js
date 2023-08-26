@@ -2,6 +2,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../config');
+// const { NotFoundErr } = require('../errors/not-found-err');
 const { ConflictErr } = require('../errors/conflict-err');
 const { BadRequestErr } = require('../errors/bad-req-err');
 
@@ -15,14 +16,14 @@ const createUser = (req, res, next) => {
     email,
     password,
   } = req.body; // получим из объекта req: имя,email,passw
-console.log(req.body)
+  console.log(req.body);
 
   bcrypt.hash(password, 10)
-    .then((hash) => {
-      User.create({
-        name, email, password: hash,
-      });
-    })
+    .then((hash) => User.create({
+      name,
+      email,
+      password: hash,
+    }))
     // вернем/созд док на осн приш. данных. Вернём записаные в базу данные
     .then((user) => res.status(201).send({
       data: {
@@ -46,7 +47,28 @@ console.log(req.body)
 // * @param req, GET /users/me
 // # возвращает информацию о текущ пользователе (email и имя) - body: { name, email }
 // * @return {Promise}
-const getCurrentUser = (req, res, next) => {
+// const getUser = (req, res, next) => {
+//   const { _id } = req.user;
+//
+//   User.findById(_id)
+//     .then((user) => {
+//       if (!user) {
+//         return new NotFoundErr('Пользователь не найден');
+//       }
+//       return res.send({
+//         data: {
+//           name: user.name,
+//           email: user.email,
+//           _id: '_id',
+//         },
+//       });
+//     })
+//     .catch(next);
+// };
+// * @param req, GET /users/me
+// # возвращает информацию о текущ пользователе (email и имя) - body: { name, email }
+// * @return {Promise}
+const getUser = (req, res, next) => {
   // ToDo: check token, getUser from DB, return username & email
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer')) {
@@ -58,7 +80,8 @@ const getCurrentUser = (req, res, next) => {
   // Проверить, валиден ли токен/jwt:
   try {
     // payload = jsonwebtoken.verify(token, 'some-secret-key');
-    payload = jsonwebtoken.verify(token, process.env.NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2');
+    payload = jsonwebtoken.verify(token, process.env.NODE_ENV === 'production'
+      ? JWT_SECRET : 'some-secret-key2');
     // res.send(payload); // в payload хранится: _id, iat,exp
   } catch (err) {
     res.status(401).send({ message: 'Необходима авторизация' });
@@ -76,5 +99,5 @@ const getCurrentUser = (req, res, next) => {
 
 module.exports = {
   createUser,
-  getCurrentUser,
+  getUser,
 };
