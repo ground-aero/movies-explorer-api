@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getUser } = require('../controllers/users');
+const { createUser, login, getUserMe } = require('../controllers/users');
 
 // router.post('/', (req, res) => {
 // получим из объекта запроса имя и описание пользователя
@@ -22,7 +22,9 @@ const { getUser } = require('../controllers/users');
 //       return next(err);
 //     });
 // });
+router.post('/signup', createUser); // создаёт польз-ля с переданными в теле name, email, pass
+router.post('/signin', login);
 
-router.get('/me', getUser); // в '/me' итак передается authorization header, поэтому не нужно 2-й раз его защищать
+router.get('/users/me', getUserMe); // в '/me' итак передается authorization header, поэтому не нужно 2-й раз его защищать
 
 module.exports = router;
