@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+// const validator = require('validator');
 // const { isURL } = require('../utils/utils');
 
 const movieSchema = new mongoose.Schema({
@@ -26,10 +26,16 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
-    validate: {
-      validator: (v) => validator.isURL(v), // join('')
-      message: 'не является валидной URL ссылкой!',
+    validate: { // опишем свойство validate
+      validator(v) { // validator - функция проверки данных. v - значение свойства age
+        return validator.isURL(v); // если возраст меньше 18, вернётся false
+      },
+      message: 'Вам должно быть больше 18 лет!', // когда validator вернёт false, будет использовано это сообщение
     },
+  //   validate: {
+  //     validator: (v) => validator.isURL(v), // join('')
+  //     message: 'не является валидной URL ссылкой!',
+  //  },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   trailerLink: {

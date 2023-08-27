@@ -11,11 +11,6 @@ const routes = require('./routes');
 
 const app = express();
 // app.use(express.json());
-
-app.use(bodyParser.json()); // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan('dev'));
-
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -25,16 +20,13 @@ mongoose.connect(process.env.MONGO_URL, {
 
 // * 2.
 // app.use('/users', require('./models/user'));
-app.use(routes);
+app.use(bodyParser.json()); // parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
+app.use(routes);
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');
-// });
-
-// app.get('/crash-test', () => { // Краш-тест сервера
-//   setTimeout(() => {
-//     throw new Error('Сервер сейчас упадёт');
-//   }, 0);
 // });
 
 // app.use('/users', usersRouter); // запросы в корень матчим с путями которые в роуте юзеров
