@@ -89,41 +89,37 @@ module.exports.getUsers = (req, res, next) => {
 /** @param req, GET /users/me (Чтение документов — R, метод: findById(req.params.id)
  * возвращает информацию о текущ пользователе (email и имя) - body: { name, email }
  * @return {Promise} */
-// module.exports.getUserMe = (req, res, next) => {
-//   res.status(200).send({ message: 'test getUserMe Ok!' })
-// };
-// module.exports.getUserMe = (req, res, next) => {
-//   console.log(req.user);
-//   User.findById(req.user._id)
-//     .then((user) => res.send({ data: user }))
-//     .catch((err) => {
-//       next(err);
-//     });
-// };
-
 module.exports.getUserMe = (req, res, next) => {
-  // ToDo: check token, getUser from DB, return username & email / { data: user }
-  const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith('Bearer')) {
-    return new AuthoErr('необходима авторизация');
-  // res.status(401).send({ message: 'Необходима авторизация' });
-  }
-  // должны получить токен из authorization хедера:
-  let payload;
-  const token = authorization.replace('Bearer ', '');
-  // Проверить, валиден ли токен/jwt:
-  try {
-    // payload = jsonwebtoken.verify(token, 'some-secret-key');
-    payload = jsonwebtoken.verify(token, process.env.NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2');
-    // res.send(payload); // в payload хранится: _id, iat,exp
-  } catch (err) {
-    res.status(401).send({ message: 'Необходима авторизация' });
-  }
-  User.findById(payload._id)
-    .orFail(() => new NotFoundErr('нет пользователя с таким ID'))
+  console.log(req.user);
+  User.findById(req.user._id)
     .then((user) => res.send({ data: user }))
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
+// module.exports.getUserMe = (req, res, next) => {
+//   // ToDo: check token, getUser from DB, return username & email / { data: user }
+//   const { authorization } = req.headers;
+//   if (!authorization || !authorization.startsWith('Bearer')) {
+//     return new AuthoErr('необходима авторизация');
+//   // res.status(401).send({ message: 'Необходима авторизация' });
+//   }
+//   // должны получить токен из authorization хедера:
+//   let payload;
+//   const token = authorization.replace('Bearer ', '');
+//   // Проверить, валиден ли токен/jwt:
+//   try {
+//     // payload = jsonwebtoken.verify(token, 'some-secret-key');
+//     payload = jsonwebtoken.verify(token, process.env.NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2');
+//     // res.send(payload); // в payload хранится: _id, iat,exp
+//   } catch (err) {
+//     res.status(401).send({ message: 'Необходима авторизация' });
+//   }
+//   User.findById(payload._id)
+//     .orFail(() => new NotFoundErr('нет пользователя с таким ID'))
+//     .then((user) => res.send({ data: user }))
+//     .catch(next);
+// };
 
 /** обновляет информацию о пользователе - body: (name, email)
  * backend:: @param req, PATCH /users/me
