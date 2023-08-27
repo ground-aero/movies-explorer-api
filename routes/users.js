@@ -1,11 +1,10 @@
 const router = require('express').Router();
 const {
-  createUser,
-  login,
   getUsers,
   getUserMe,
   updateUserMe,
 } = require('../controllers/users');
+const auth = require('../middlewares/auth');
 
 // router.post('/', (req, res) => {
 // получим из объекта запроса имя и описание пользователя
@@ -28,11 +27,13 @@ const {
 //       return next(err);
 //     });
 // });
-router.post('/signup', createUser); // создаёт польз-ля с переданными в теле name, email, pass
-router.post('/signin', login);
 
-router.get('/users', getUsers); // TEST ROUTE!
-router.get('/users/me', getUserMe); // в '/me' итак передается authorization header, поэтому не нужно 2-й раз его защищать
-router.patch('/users/me', updateUserMe);
+// router.use(auth);
+// router.post('/signup', createUser); // создаёт польз-ля с переданными в теле name, email, pass
+// router.post('/signin', login);
+
+router.get('/users/', getUsers); // TEST ROUTE!
+router.get('/users/me', auth, getUserMe); // в '/me' итак передается authorization header, поэтому не нужно 2-й раз его защищать
+router.patch('/users/me', auth, updateUserMe);
 
 module.exports = router;

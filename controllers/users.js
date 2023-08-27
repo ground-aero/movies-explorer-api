@@ -58,22 +58,23 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       res.send({
+        // user,
         token: jsonwebtoken.sign(
           { _id: user._id },
           NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2',
-          { expiresIn: '7d' }
+          { expiresIn: '7d' },
         ),
       });
       // /** библ. jsonwebtoken, вызовом метода .sign создаем токен.
       //  * Методу sign передаем 2 аргумента: пейлоуд токена и секретный ключ подписи.
       //  * Пейлоуд токена — зашифрованный в строку объект пользователя, его достаточно,
       //  * чтобы однозначно определить пользователя */
-      // const token = jsonwebtoken.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2', { expiresIn: '7d' });
+      // const token = jsonwebtoken.sign({ _id: user._id }, NODE_ENV === 'production'
+      // ? JWT_SECRET : 'some-secret-key2', { expiresIn: '7d' });
       // res.send({ token });
     })
     .catch(next);
 };
-
 
 /** ТЕСТОВЫЙ !! @param req, GET /users
  * Получить всех пользователей
@@ -83,28 +84,31 @@ module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch(next);
-}
+};
 
 /** @param req, GET /users/me (Чтение документов — R, метод: findById(req.params.id)
  * возвращает информацию о текущ пользователе (email и имя) - body: { name, email }
  * @return {Promise} */
 // module.exports.getUserMe = (req, res, next) => {
-//   console.log(req.user)
+//   res.status(200).send({ message: 'test getUserMe Ok!' })
+// };
+// module.exports.getUserMe = (req, res, next) => {
+//   console.log(req.user);
 //   User.findById(req.user._id)
-//     .orFail(() => new NotFoundErr('нет такого ID пользователя'))
 //     .then((user) => res.send({ data: user }))
 //     .catch((err) => {
 //       next(err);
 //     });
 // };
+
 module.exports.getUserMe = (req, res, next) => {
-  // ToDo: check token, getUser from DB, return username & email
+  // ToDo: check token, getUser from DB, return username & email / { data: user }
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer')) {
     return new AuthoErr('необходима авторизация');
-    // res.status(401).send({ message: 'Необходима авторизация' });
+  // res.status(401).send({ message: 'Необходима авторизация' });
   }
-    // должны получить токен из authorization хедера:
+  // должны получить токен из authorization хедера:
   let payload;
   const token = authorization.replace('Bearer ', '');
   // Проверить, валиден ли токен/jwt:
@@ -125,11 +129,13 @@ module.exports.getUserMe = (req, res, next) => {
  * backend:: @param req, PATCH /users/me
  * user._id - user's ID */
 module.exports.updateUserMe = (req, res, next) => {
-  const { _id } = req.user;
+  // const { _id } = req.user;
+  const { user: { _id } } = req;
   const { name, email } = req.body;
 
   return User
     .findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
+    .orFail(() => new NotFoundErr('нет пользователя с таким ID'))
     .then((user) => res.send({
       data: user,
     })) // res.status(200) по дефолту
@@ -141,3 +147,21 @@ module.exports.updateUserMe = (req, res, next) => {
     })
     .catch(next);
 };
+// module.exports.updateUserMe = (req, res, next) => {
+//   console.log(user)
+//   const { _id } = req.user;
+//   const { name, email } = req.body;
+//
+//   return User
+//     .findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
+//     .then((user) => res.send({
+//       data: user,
+//     })) // res.status(200) по дефолту
+//     .catch((err) => {
+//       if (err.name === 'CastError' || err.name === 'ValidationError') {
+//         return next(new BadRequestErr(err.message));
+//       }
+//       return next(err);
+//     })
+//     .catch(next);
+// };

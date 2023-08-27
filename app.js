@@ -24,7 +24,7 @@ app.use(bodyParser.json()); // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-app.use(routes);
+app.use(routes); // вся маршрутизация в паапке routes/
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');
 // });
