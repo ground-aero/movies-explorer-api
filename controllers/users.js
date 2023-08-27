@@ -74,6 +74,17 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
+
+/** ТЕСТОВЫЙ !! @param req, GET /users
+ * Получить всех пользователей
+ * @param res
+ */
+module.exports.getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.send({ data: users }))
+    .catch(next);
+}
+
 /** @param req, GET /users/me (Чтение документов — R, метод: findById(req.params.id)
  * возвращает информацию о текущ пользователе (email и имя) - body: { name, email }
  * @return {Promise} */
