@@ -1,5 +1,7 @@
 const Movie = require('../models/movie');
 const BadRequestErr = require('../errors/bad-req-err');
+const NotFoundErr = require('../errors/not-found-err');
+// const ForbiddenErr = require('../errors/')
 
 const createMovie = (req, res, next) => {
   const {
@@ -47,7 +49,7 @@ const createMovie = (req, res, next) => {
 };
 
 // # возвращает все сохранённые текущим пользователем фильмы
-// GET /movies
+// backend:: GET /movies
 const getMovies = (req, res, next) => {
   return (
     Movie.find({})
@@ -56,7 +58,31 @@ const getMovies = (req, res, next) => {
   )
 };
 
+// # удаляет сохранённый фильм по id
+// backend:: DELETE /movies/_id
+const deleteMovieId = (req, res, next) => {
+  const { movieId } = req.params;
+  return Movie.findById(movieId)
+      .orFail(() => new NotFoundErr('No such movie ID'))
+      .then((movie) => {
+        if (movie.owner.toString() !== req.user._id) { // req.user._id - это
+          return next(new Error('Нельзя удалить чужую карточку!'));
+        }
+        return movie.deleteOne()
+          .then(() => res.send({ data: movie }));
+      })
+      .catch((err) => {
+        if (err.kind === 'ObjectId') {
+          next(new BadRequestErr('Невалидный ID карточки'));
+        } else {
+          next(err);
+        }
+      });
+
+};
+
 module.exports = {
   createMovie,
   getMovies,
+  deleteMovieId,
 };
