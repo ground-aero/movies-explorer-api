@@ -92,10 +92,12 @@ module.exports.getUsers = (req, res, next) => {
 module.exports.getUserMe = (req, res, next) => {
   console.log(req.user);
   User.findById(req.user._id)
+    .orFail(() => new ({ message: 'Пользователь не найден' }) )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      next(err);
-    });
+      res.status(401).send({ message: 'Необходима авторизация' });
+    })
+    .catch(next);
 };
 // module.exports.getUserMe = (req, res, next) => {
 //   // ToDo: check token, getUser from DB, return username & email / { data: user }
@@ -131,7 +133,6 @@ module.exports.updateUserMe = (req, res, next) => {
 
   return User
     .findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
-    .orFail(() => new NotFoundErr('нет пользователя с таким ID'))
     .then((user) => res.send({
       data: user,
     })) // res.status(200) по дефолту
