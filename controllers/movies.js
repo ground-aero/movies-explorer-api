@@ -1,7 +1,7 @@
 const Movie = require('../models/movie');
 const BadRequestErr = require('../errors/bad-req-err');
 const NotFoundErr = require('../errors/not-found-err');
-// const ForbiddenErr = require('../errors/')
+const ForbiddenErr = require('../errors/forbidden-err');
 
 const createMovie = (req, res, next) => {
   const {
@@ -66,7 +66,7 @@ const deleteMovieId = (req, res, next) => {
       .orFail(() => new NotFoundErr('No such movie ID'))
       .then((movie) => {
         if (movie.owner.toString() !== req.user._id) { // req.user._id - это
-          return next(new Error('Нельзя удалить чужую карточку!'));
+          return next(new ForbiddenErr('Нельзя удалить чужую карточку!'));
         }
         return movie.deleteOne()
           .then(() => res.send({ data: movie }));
