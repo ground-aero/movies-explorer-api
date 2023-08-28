@@ -1,13 +1,38 @@
 const Movie = require('../models/movie');
-const { BadRequestErr } = require('../errors/bad-req-err');
+const BadRequestErr = require('../errors/bad-req-err');
 
 const createMovie = (req, res, next) => {
-  const { country } = req.body;
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEn
+  } = req.body;
   const { _id } = req.user;
   // console.log(_id)
   // debugger
   return (
-    Movie.create({ country, owner: _id }) // записыв _id в поле owner
+    Movie.create({
+      owner: _id,
+      country,
+      director,
+      duration,
+      year,
+      description,
+      image,
+      trailerLink,
+      thumbnail,
+      movieId,
+      nameRU,
+      nameEn
+    }) // записыв _id в поле owner
       // Вернём записаные в базу данные
       .then((movie) => res.status(201).send({ data: movie })) /** В теле запроса на созд карточки
      передайте JSON-объект */
