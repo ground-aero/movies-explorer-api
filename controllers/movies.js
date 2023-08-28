@@ -46,6 +46,17 @@ const createMovie = (req, res, next) => {
   );
 };
 
+// # возвращает все сохранённые текущим пользователем фильмы
+// GET /movies
+const getMovies = (req, res, next) => {
+  return (
+    Movie.find({})
+      .then((movies) => res.send({ data: movies }))
+      .catch(next)
+  )
+};
+
 module.exports = {
   createMovie,
+  getMovies,
 };
