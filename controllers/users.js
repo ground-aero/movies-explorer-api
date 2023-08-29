@@ -3,10 +3,9 @@ const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { JWT_SECRET } = require('../config');
-const { NotFoundErr } = require('../errors/not-found-err');
-const { AuthoErr } = require('../errors/autho-err');
-const { ConflictErr } = require('../errors/conflict-err');
-const { BadRequestErr } = require('../errors/bad-req-err');
+const NotFoundErr = require('../errors/not-found-err');
+const ConflictErr = require('../errors/conflict-err');
+const BadRequestErr = require('../errors/bad-req-err');
 
 const { NODE_ENV } = process.env;
 
@@ -20,7 +19,6 @@ module.exports.createUser = (req, res, next) => {
     email,
     password,
   } = req.body; // получим из объекта req: имя,email,passw
-  // console.log(req.body);
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
@@ -41,7 +39,7 @@ module.exports.createUser = (req, res, next) => {
         return next(new ConflictErr('Такой логин-емейл уже существует! /409'));
       }
       if (err.name === 'ValidationError') {
-        return next(new BadRequestErr('Переданы некорректные данные при создании пользователя'));
+        return next(new BadRequestErr('Переданы некорректные данные при создании пользователя /400'));
       }
       return next(err);
     })
@@ -78,8 +76,7 @@ module.exports.login = (req, res, next) => {
 
 /** ТЕСТОВЫЙ !! @param req, GET /users
  * Получить всех пользователей
- * @param res
- */
+ * @param res */
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
@@ -90,75 +87,29 @@ module.exports.getUsers = (req, res, next) => {
  * возвращает информацию о текущ пользователе (email и имя) - body: { name, email }
  * @return {Promise} */
 module.exports.getUserMe = (req, res, next) => {
-  console.log(req.user);
   User.findById(req.user._id)
-    .orFail(() => new ({ message: 'Пользователь не найден' }) )
+    .orFail(() => new NotFoundErr('Пользователь с таким ID не найден')) // 404
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      res.status(401).send({ message: 'Необходима авторизация' });
-    })
-    .catch(next);
+    .catch(next); // 401 - AuthoErr - from auth.js
 };
-// module.exports.getUserMe = (req, res, next) => {
-//   // ToDo: check token, getUser from DB, return username & email / { data: user }
-//   const { authorization } = req.headers;
-//   if (!authorization || !authorization.startsWith('Bearer')) {
-//     return new AuthoErr('необходима авторизация');
-//   // res.status(401).send({ message: 'Необходима авторизация' });
-//   }
-//   // должны получить токен из authorization хедера:
-//   let payload;
-//   const token = authorization.replace('Bearer ', '');
-//   // Проверить, валиден ли токен/jwt:
-//   try {
-//     // payload = jsonwebtoken.verify(token, 'some-secret-key');
-//     payload = jsonwebtoken.verify(token, process.env.NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2');
-//     // res.send(payload); // в payload хранится: _id, iat,exp
-//   } catch (err) {
-//     res.status(401).send({ message: 'Необходима авторизация' });
-//   }
-//   User.findById(payload._id)
-//     .orFail(() => new NotFoundErr('нет пользователя с таким ID'))
-//     .then((user) => res.send({ data: user }))
-//     .catch(next);
-// };
 
 /** обновляет информацию о пользователе - body: (name, email)
  * backend:: @param req, PATCH /users/me
  * user._id - user's ID */
 module.exports.updateUserMe = (req, res, next) => {
-  // const { _id } = req.user;
-  const { user: { _id } } = req;
+  const { user: { _id } } = req; // @prop from auth
   const { name, email } = req.body;
 
   return User
     .findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
     .then((user) => res.send({
       data: user,
-    })) // res.status(200) по дефолту
+    })) // res.status(200) by default
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return next(new BadRequestErr(err.message));
+        return next(new BadRequestErr(err.message)); // 400
       }
       return next(err);
     })
     .catch(next);
 };
-// module.exports.updateUserMe = (req, res, next) => {
-//   console.log(user)
-//   const { _id } = req.user;
-//   const { name, email } = req.body;
-//
-//   return User
-//     .findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
-//     .then((user) => res.send({
-//       data: user,
-//     })) // res.status(200) по дефолту
-//     .catch((err) => {
-//       if (err.name === 'CastError' || err.name === 'ValidationError') {
-//         return next(new BadRequestErr(err.message));
-//       }
-//       return next(err);
-//     })
-//     .catch(next);
-// };
