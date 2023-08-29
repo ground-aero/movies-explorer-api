@@ -39,8 +39,9 @@ const createMovie = (req, res, next) => {
       .then((movie) => res.status(201).send({ data: movie })) /** В теле запроса на созд карточки
      передайте JSON-объект */
       .catch((err) => {
-        if (err.name === 'ValidationError') {
-          next(new BadRequestErr('Переданы некорректные данные при создании карточки'));
+        console.log(err)
+        if (err.name === 'ValidationError' || err.name === 'ValidatorError') {
+          next(new BadRequestErr('Переданы некорректные данные при создании карточки фильма')); // 400
         } else {
           next(err);
         }
@@ -63,17 +64,17 @@ const getMovies = (req, res, next) => {
 const deleteMovieId = (req, res, next) => {
   const { movieId } = req.params;
   return Movie.findById(movieId)
-      .orFail(() => new NotFoundErr('No such movie ID'))
+      .orFail(() => new NotFoundErr('Such movie ID not found')) // 404
       .then((movie) => {
-        if (movie.owner.toString() !== req.user._id) { // req.user._id - это
-          return next(new ForbiddenErr('Нельзя удалить чужую карточку!'));
+        if (movie.owner.toString() !== req.user._id) { // req.user._id
+          return next(new ForbiddenErr('You\'re not authorized to delete this film!')); // 403 - Forbidden
         }
         return movie.deleteOne()
           .then(() => res.send({ data: movie }));
       })
       .catch((err) => {
         if (err.kind === 'ObjectId') {
-          next(new BadRequestErr('Невалидный ID карточки'));
+          next(new BadRequestErr('Such movie ID not valid')); // 400
         } else {
           next(err);
         }
