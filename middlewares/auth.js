@@ -12,7 +12,7 @@ const auth = (req, res, next) => {
    *  взять заголовок authorization */
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new AuthoErr('Необходима авторизация *');
+    throw new AuthoErr('Необходима авторизация *'); // 401
   }
 
   /** достать jwt из хедера authorization, удалить Bearer из загол */
