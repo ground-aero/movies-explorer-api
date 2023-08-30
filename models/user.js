@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'your "password" is required'],
+    required: [true, 'your "password" is required, minimum 4 characters'],
     select: false, // Так по умолчанию хеш пароля польз-ля не будет возвращаться из базы
   },
 }, { versionKey: false });

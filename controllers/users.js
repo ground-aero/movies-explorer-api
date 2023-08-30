@@ -27,11 +27,11 @@ module.exports.createUser = (req, res, next) => {
       password: hash,
     }))
     // вернем/созд док на осн приш. данных. Вернём записаные в базу данные
-    .then((user) => res.status(201).send({
+    .then((user) => res.status(201).send({ // Передавать хеш пароля обратно пользователю ни к чему
       data: {
         _id: user._id,
-        name,
-        email,
+        name: user.name,
+        email: user.email,
       },
     }))
     .catch((err) => {

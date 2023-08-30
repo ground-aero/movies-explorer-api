@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose').default;
 require('dotenv').config(); // чтение env-переменных из .env-файла
+const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const errorsHandler = require('./middlewares/errors-handler');
@@ -29,7 +30,7 @@ app.use(routes); // вся маршрутизация в паапке routes/
 //   res.send('Hello World!');
 // });
 
-// app.use('/users', usersRouter); // запросы в корень матчим с путями которые в роуте юзеров
+app.use(errors()); // подкл. валидацию Joi/celebrate // 400
 app.use(errorsHandler);
 // app.use((error, req, res, next) => {
 //   res.status(error.status || 500);
