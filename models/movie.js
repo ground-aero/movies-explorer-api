@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { isURL } = require('../utils/utils');
+// const { isURL } = require('../utils/utils');
 
 const movieSchema = new mongoose.Schema({
   owner: {

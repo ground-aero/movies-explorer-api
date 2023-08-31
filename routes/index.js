@@ -11,7 +11,7 @@ router.post('/signin', validateLogin, login);
 
 router.use(auth);
 router.use(usersRoutes);
-router.use(moviesRoutes)
+router.use(moviesRoutes);
 
 router.use('/*', (req, res, next) => next(new NotFoundError('такой маршрут не найден'))); // 404
 

@@ -24,7 +24,7 @@ console.log(process.env.NODE_ENV); // production
 app.use(bodyParser.json()); // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
-app.use(requestLogger);  // подкл. логгер запросов
+app.use(requestLogger); // подкл. логгер запросов
 
 app.use(routes); // вся маршрутизация в папке routes/
 
