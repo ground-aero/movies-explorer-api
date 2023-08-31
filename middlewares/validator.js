@@ -4,7 +4,7 @@
 const { celebrate, Joi } = require('celebrate');
 const { REGEX } = require('../utils/utils');
 
-const createUserValidator = celebrate({
+const validateCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
@@ -12,21 +12,21 @@ const createUserValidator = celebrate({
   }),
 });
 
-const loginValidator = celebrate({
+const validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(4),
   }),
 });
 
-const updateMeValidator = celebrate({
+const validateUpdateMe = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
   }),
 });
 
-const createMovieValidator = celebrate({
+const validateCreateMovie = celebrate({
   body: Joi.object().keys({
     movieId: Joi.number().integer().required(),
     country: Joi.string().min(2).max(30).required(),
@@ -42,7 +42,7 @@ const createMovieValidator = celebrate({
   }),
 });
 
-const deleteMovieIdValidator = celebrate({
+const validatdeDeleteMovieId = celebrate({
   params: Joi.object().keys({
     movieId: Joi.string().length(24).hex().required(),
   }),
@@ -54,9 +54,9 @@ const deleteMovieIdValidator = celebrate({
 // });
 
 module.exports = {
-  createUserValidator,
-  loginValidator,
-  updateMeValidator,
-  createMovieValidator,
-  deleteMovieIdValidator,
+  validateCreateUser,
+  validateLogin,
+  validateUpdateMe,
+  validateCreateMovie,
+  validatdeDeleteMovieId,
 };
