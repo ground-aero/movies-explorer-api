@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const errorsHandler = require('./middlewares/errors-handler');
 const routes = require('./routes');
 const { PORT, DB_URL } = require('./config');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const app = express();
 // app.use(express.json());
@@ -23,23 +24,13 @@ console.log(process.env.NODE_ENV); // production
 app.use(bodyParser.json()); // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+app.use(requestLogger);  // подкл. логгер запросов
 
-app.use(routes); // вся маршрутизация в паапке routes/
-// app.get('/', (req, res) => {
-//   res.send('Hello World!');
-// });
+app.use(routes); // вся маршрутизация в папке routes/
 
+app.use(errorLogger); // подключаем логгер ошибок
 app.use(errors()); // подкл. валидацию Joi/celebrate // 400
-app.use(errorsHandler);
-// app.use((error, req, res, next) => {
-//   res.status(error.status || 500);
-//   res.json({
-//     error: {
-//       message: error.message,
-//     },
-//   });
-//   next();
-// });
+app.use(errorsHandler); // centralized err handler
 
 app.listen(PORT, () => {
   console.log(`this app listening on port: ${PORT}`);
