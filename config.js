@@ -3,22 +3,22 @@
 // вызов метода config() библиотеки dotenv => ищет в корне файла .env
 require('dotenv').config();
 
-const JWT_SECRET = process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev';
 const PORT = process.env.PORT || 4000;
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/bitfilmsdb';
+const JWT_SECRET = process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret';
+const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/bitfilmsdb';
 // const {
 //   JWT_SECRET,
-//   MONGO_URL,
+//   DB_URL,
 //   NODE_ENV,
 // } = process.env;
 //
 // module.exports = {
 //   JWT_SECRET: NODE_ENV === 'production' ? JWT_SECRET : 'JWT_SECRET',
-//   MONGO_URL: NODE_ENV === 'production' ? MONGO_URL : 'mongodb://127.0.0.1:27017/mestodb',
+//   DB_URL: NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/mestodb',
 //   // MONGO_URL: NODE_ENV === 'production' ? MONGO_URL : 'mongodb://0.0.0.0:27017/mestodb',
 // };
 module.exports = {
-  JWT_SECRET,
   PORT,
-  MONGO_URL,
+  JWT_SECRET,
+  DB_URL,
 };

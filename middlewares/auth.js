@@ -25,7 +25,7 @@ const auth = (req, res, next) => {
   try {
     /** Токен верифицирован, пейлоуд извлечён.
      * проверить что jwt валидный с помощью библ jsonwebtoken */
-    payload = jsonwebtoken.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2');
+    payload = jsonwebtoken.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (error) {
     throw new AuthoErr('передан неверный логин или пароль -');
   }

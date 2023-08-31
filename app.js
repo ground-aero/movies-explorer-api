@@ -1,23 +1,22 @@
+require('dotenv').config(); // После этого env-переменные из файла добавятся в process.env:
 const express = require('express');
 const mongoose = require('mongoose').default;
-require('dotenv').config(); // чтение env-переменных из .env-файла
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const errorsHandler = require('./middlewares/errors-handler');
 const routes = require('./routes');
-// const usersRouter = require('./routes/users');
-// const { PORT } = require('./config');
-// const usersRouter = require('./routes/users');
+const { PORT } = require('./config');
 
 const app = express();
 // app.use(express.json());
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log(`подключились к БД: ${process.env.MONGO_URL} \n`))
+  .then(() => console.log(`подключились к БД: ${process.env.DB_URL} \n`))
   .catch((err) => console.log('Ошибка подключения к базе данных: ', err.message));
+console.log(process.env.NODE_ENV); // production
 
 // * 2.
 // app.use('/users', require('./models/user'));
@@ -42,7 +41,7 @@ app.use(errorsHandler);
 //   next();
 // });
 
-app.listen(process.env.PORT, () => {
-  console.log(`this app listening on port: ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`this app listening on port: ${PORT}`);
   // console.log(BASE_URL);
 });

@@ -2,12 +2,12 @@ require('dotenv').config();
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const { JWT_SECRET } = require('../config');
+// const { JWT_SECRET } = require('../config');
 const NotFoundErr = require('../errors/not-found-err');
 const ConflictErr = require('../errors/conflict-err');
 const BadRequestErr = require('../errors/bad-req-err');
 
-const { NODE_ENV } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 /** back: POST /signup
  *  front: POST /auth/local/register
@@ -59,7 +59,7 @@ module.exports.login = (req, res, next) => {
         // user,
         token: jsonwebtoken.sign(
           { _id: user._id },
-          NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key2',
+          NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
           { expiresIn: '7d' },
         ),
       });
