@@ -6,11 +6,11 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const errorsHandler = require('./middlewares/errors-handler');
 const routes = require('./routes');
-const { PORT } = require('./config');
+const { PORT, DB_URL } = require('./config');
 
 const app = express();
 // app.use(express.json());
-mongoose.connect(process.env.DB_URL, {
+mongoose.connect(DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

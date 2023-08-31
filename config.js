@@ -4,21 +4,16 @@
 require('dotenv').config();
 
 const PORT = process.env.PORT || 4000;
-const JWT_SECRET = process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret';
-const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/bitfilmsdb';
-// const {
-//   JWT_SECRET,
-//   DB_URL,
-//   NODE_ENV,
-// } = process.env;
-//
-// module.exports = {
-//   JWT_SECRET: NODE_ENV === 'production' ? JWT_SECRET : 'JWT_SECRET',
-//   DB_URL: NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/mestodb',
-//   // MONGO_URL: NODE_ENV === 'production' ? MONGO_URL : 'mongodb://0.0.0.0:27017/mestodb',
-// };
-module.exports = {
-  PORT,
+// const JWT_SECRET = process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET : 'dev-secret';
+// const DB_URL = process.env.DB_URL || 'mongodb://127.0.0.1:27017/bitfilmsdb';
+const {
+  NODE_ENV,
   JWT_SECRET,
   DB_URL,
+} = process.env;
+
+module.exports = {
+  JWT_SECRET: NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+  DB_URL: NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/mestodb',
+  PORT,
 };

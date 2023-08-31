@@ -6,8 +6,9 @@ const User = require('../models/user');
 const NotFoundErr = require('../errors/not-found-err');
 const ConflictErr = require('../errors/conflict-err');
 const BadRequestErr = require('../errors/bad-req-err');
+const { JWT_SECRET } = require('../config');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV } = process.env;
 
 /** back: POST /signup
  *  front: POST /auth/local/register
