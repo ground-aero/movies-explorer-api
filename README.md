@@ -1,4 +1,5 @@
 # movies-explorer-api
+## Backend for Movies application
 
-#### middlewares:
-auth - adds payload of token into 'req.user' object
+### api domain: [https://api.ga-movies.nomoredomainsicu.ru](https://api.ga-movies.nomoredomainsicu.ru)
+
