@@ -103,12 +103,16 @@ module.exports.updateUserMe = (req, res, next) => {
 
   User
     .findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
+    .orFail(() => new NotFoundErr('Such user ID not found')) // 404
     .then((user) => res.send({
       data: user,
     })) // res.status(200) by default
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        return next(new BadRequestErr(err.message)); // 400
+      if (err.code === 11000) {
+        return next(new ConflictErr('Such user ID already exists')); // 409
+      }
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestErr('Such values are incorrect for the user update')); // 400
       }
       return next(err);
     })
