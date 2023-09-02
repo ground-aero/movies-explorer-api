@@ -14,6 +14,6 @@ const {
 
 module.exports = {
   JWT_SECRET: NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-  DB_URL: NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/mestodb',
+  DB_URL: NODE_ENV === 'production' ? DB_URL : 'mongodb://127.0.0.1:27017/bitfilmsdb',
   PORT,
 };
