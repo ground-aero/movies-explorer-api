@@ -64,16 +64,16 @@ const getMyMovies = (req, res, next) => {
   const userId = req.user._id;
   Movie.find({ owner: userId })
     .then((movies) => {
-      res.send({ data: movies })
+      res.send({ data: movies });
     })
     .catch(next);
-}
+};
 
 // # удаляет сохранённый фильм по id
 // backend:: DELETE /movies/_id
 const deleteMovieId = (req, res, next) => {
   const { movieId } = req.params;
-  return Movie.findById(movieId)
+  Movie.findById(movieId)
     .orFail(() => new NotFoundErr('Such movie ID not found')) // 404
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) { // req.user._id

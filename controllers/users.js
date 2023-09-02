@@ -54,7 +54,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   // ToDo: 1)find user, 2)check pass.., 3)return jwt & user
-  return User.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then((user) => {
       res.send({
         // user,
@@ -101,7 +101,7 @@ module.exports.updateUserMe = (req, res, next) => {
   const { user: { _id } } = req; // @prop from auth
   const { name, email } = req.body;
 
-  return User
+  User
     .findByIdAndUpdate(_id, { name, email }, { new: true, runValidators: true })
     .then((user) => res.send({
       data: user,
