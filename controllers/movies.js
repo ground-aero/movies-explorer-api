@@ -49,13 +49,25 @@ const createMovie = (req, res, next) => {
   );
 };
 
-// # возвращает все сохранённые текущим пользователем фильмы
+// # возвращает все сохранённые текущим! пользователем фильмы
 // backend:: GET /movies
-const getMovies = (req, res, next) => {
-  Movie.find({})
-    .then((movies) => res.send({ data: movies }))
+// const getMyMovies = async (req, res, next) => {
+//   const userId = req.user._id;
+//   try {
+//     const userMovies = await Movie.find({ owner: userId });
+//     res.status(200).send({ data: userMovies });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+const getMyMovies = (req, res, next) => {
+  const userId = req.user._id;
+  Movie.find({ owner: userId })
+    .then((movies) => {
+      res.send({ data: movies })
+    })
     .catch(next);
-};
+}
 
 // # удаляет сохранённый фильм по id
 // backend:: DELETE /movies/_id
@@ -81,6 +93,6 @@ const deleteMovieId = (req, res, next) => {
 
 module.exports = {
   createMovie,
-  getMovies,
+  getMyMovies,
   deleteMovieId,
 };
