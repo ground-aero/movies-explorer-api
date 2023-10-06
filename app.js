@@ -1,9 +1,10 @@
-require('dotenv').config(); // После этого env-переменные из файла добавятся в process.env:
+require('dotenv').config(); // env-переменные из файла добавятся в process.env:
 const express = require('express');
 const mongoose = require('mongoose').default;
 const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const cors = require('cors');
 const morgan = require('morgan');
 const errorsHandler = require('./middlewares/errors-handler');
 const routes = require('./routes');

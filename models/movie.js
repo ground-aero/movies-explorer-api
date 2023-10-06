@@ -65,7 +65,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     default: 'Название фильма',
   },
-  nameEn: {
+  nameEN: {
     type: String,
     required: true,
     default: 'Film name',

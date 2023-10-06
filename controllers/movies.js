@@ -3,7 +3,7 @@ const BadRequestErr = require('../errors/bad-req-err');
 const NotFoundErr = require('../errors/not-found-err');
 const ForbiddenErr = require('../errors/forbidden-err');
 
-const createMovie = (req, res, next) => {
+const createMovie = (req, res, next) => { // route - post('/movies')
   const {
     country,
     director,
@@ -15,7 +15,7 @@ const createMovie = (req, res, next) => {
     thumbnail,
     movieId,
     nameRU,
-    nameEn,
+    nameEN,
   } = req.body;
   const { _id } = req.user;
   // console.log(_id)
@@ -33,7 +33,7 @@ const createMovie = (req, res, next) => {
       thumbnail,
       movieId,
       nameRU,
-      nameEn,
+      nameEN,
     }) // записыв _id в поле owner
       // Вернём записаные в базу данные
       .then((movie) => res.status(201).send({ data: movie })) /** В теле запроса на созд карточки
