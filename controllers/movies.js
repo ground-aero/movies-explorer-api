@@ -79,7 +79,7 @@ const deleteMovieId = (req, res, next) => {
       if (movie.owner.toString() !== req.user._id) { // req.user._id
         return next(new ForbiddenErr('You\'re not authorized to delete this film!')); // 403 - Forbidden
       }
-      return movie.deleteOne()
+      return Movie.deleteOne()
         .then(() => res.send({ data: movie }));
     })
     .catch((err) => {

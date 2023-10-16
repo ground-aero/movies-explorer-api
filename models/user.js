@@ -6,7 +6,7 @@ const AuthoErr = require('../errors/autho-err');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name should be filled in'],
     minlength: [2, 'Min length of "name" is - 2 symbols'],
     maxlength: [30, 'Max length of "name" is - 30 symbols'],
     default: 'Your Name',
@@ -18,8 +18,8 @@ const userSchema = new mongoose.Schema({
     // trim: true,
     // lowercase: true,
     validate: {
-      validator(v) {
-        return validator.isEmail(v);
+      validator(email) {
+        return validator.isEmail(email);
       },
       message: 'invalid email',
     },
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'your "password" is required, minimum 4 characters'],
-    select: false, // Так по умолчанию хеш пароля польз-ля не будет возвращаться из базы
+    select: false, // Так по умолчанию хеш пароля польз-ля не будет возвращаться из API
   },
 }, { versionKey: false });
 
@@ -41,13 +41,13 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
     .then((user) => {
       // user не нашёлся — отклоняем промис
       if (!user) {
-        return Promise.reject(new AuthoErr('Неправильные почта или пароль..'));
+        return Promise.reject(new AuthoErr('Вы ввели неправильный логин или пароль..'));
       }
       // Todo: если user нашёлся — то сравниваем хеши
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new AuthoErr('Неправильные почта или пароль***'));
+            return Promise.reject(new AuthoErr('Неправильный логин или пароль**'));
           }
           return user; // теперь user доступен
         });

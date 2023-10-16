@@ -6,6 +6,7 @@ const User = require('../models/user');
 const NotFoundErr = require('../errors/not-found-err');
 const ConflictErr = require('../errors/conflict-err');
 const BadRequestErr = require('../errors/bad-req-err');
+const AuthoErr = require('../errors/autho-err');
 const { JWT_SECRET } = require('../config');
 
 const { NODE_ENV } = process.env;
@@ -47,7 +48,7 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-/** @param req: почта и пароль, и проверить их
+/** @param req: email, password. Проверяет переданные в теле почту и пароль
  *  @param res: вернуть JWT, если в теле запроса переданы правильные почта и пароль.
  * backend:  POST /signin
  * frontend: POST /auth/local */
@@ -72,6 +73,12 @@ module.exports.login = (req, res, next) => {
       // ? JWT_SECRET : 'some-secret-key2', { expiresIn: '7d' });
       // res.send({ token });
     })
+    // .catch((err) => {
+    //   if (err.name === 'Unauthorized') {
+    //     throw new AuthoErr('Вы ввели неправильный логин или проль')
+    //   }
+    //   throw err;
+    // })
     .catch(next);
 };
 
