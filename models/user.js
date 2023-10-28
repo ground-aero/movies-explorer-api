@@ -47,7 +47,7 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new AuthoErr('Неправильный логин или пароль**'));
+            return Promise.reject(new AuthoErr('Неправильный логин или пароль*'));
           }
           return user; // теперь user доступен
         });

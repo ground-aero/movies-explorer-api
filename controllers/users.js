@@ -38,10 +38,10 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        return next(new ConflictErr('Такой логин-емейл уже существует! /409'));
+        return next(new ConflictErr('Пользователь с таким email уже существвует (409)'));
       }
       if (err.name === 'ValidationError') {
-        return next(new BadRequestErr('Переданы некорректные данные при создании пользователя /400'));
+        return next(new BadRequestErr('Переданы некорректные данные при создании пользователя (400)'));
       }
       return next(err);
     })
