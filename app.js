@@ -12,16 +12,22 @@ const { PORT, DB_URL } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { limiter } = require('./middlewares/limiter');
 
-const corsOptions = {
-  origin: true,
-  credentials: true,
-};
-
 const app = express();
 // app.use(express.json());
 
-// app.use(cors({ origin: 'http://127.0.0.1:4000' })); // разреш кросс-домейн reqs с origin: 3000
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: true,
+//   credentials: true,
+// };
+// app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000' })); // разреш кросс-домейн reqs с origin: 3000
+// app.use(cors({
+//   origin: [
+//     'http://localhost:3000',
+//     'http://ga-movies.nomoredomains.icu.ru',
+//     'https://ga-movies.nomoredomains.icu.ru',
+//   ],
+// }));
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
