@@ -19,8 +19,8 @@ const app = express();
 //   origin: true,
 //   credentials: true,
 // };
-// app.use(cors());
-app.use(cors({ origin: 'http://localhost:3000' })); // разреш кросс-домейн reqs с origin: 3000
+app.use(cors());
+// app.use(cors({ origin: 'http://127.0.0.1:4000' })); // разреш кросс-домейн reqs с origin: 3000
 // app.use(cors({
 //   origin: [
 //     'http://localhost:3000',
