@@ -34,8 +34,20 @@ const createMovie = (req, res, next) => { // route - post('/movies')
       movieId,
       nameRU,
       nameEN,
-    }) // записыв _id в поле owner
-      // Вернём записаные в базу данные
+    }) /** записыв _id в поле owner Вернём записаные в базу данные */
+      // .then((movie) => {
+      //   movie.populate('owner')
+      //     .then((resulMovie) => res.status(201).send({ data: resulMovie }))
+      //     .catch((err) => {
+      //       console.log(err);
+      //       if (err.name === 'ValidationError' || err.name === 'ValidatorError') {
+      //        next(new BadRequestErr('Переданы некорректные данные при создании карточки фильма'))
+      // 400
+      //       } else {
+      //         next(err);
+      //       }
+      //     })
+      // })
       .then((movie) => res.status(201).send({ data: movie })) /** В теле запроса на созд карточки
      передайте JSON-объект */
       .catch((err) => {

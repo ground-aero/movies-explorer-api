@@ -4,5 +4,5 @@
 #### api domain: [https://api.ga-movies.nomoredomainsicu.ru](https://api.ga-movies.nomoredomainsicu.ru)
 
 #### TODO:
-apply try-catch-finally in controllers  
+apply try-catch-finally in all controllers  
 

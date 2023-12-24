@@ -29,16 +29,16 @@ const validateUpdateMe = celebrate({
 const validateCreateMovie = celebrate({
   body: Joi.object().keys({
     movieId: Joi.number().integer().required(),
-    country: Joi.string().min(2).max(30).required(),
-    director: Joi.string().min(2).max(30).required(),
+    country: Joi.string().min(2).max(250).required(),
+    director: Joi.string().min(2).max(250).required(),
     duration: Joi.number().integer().required(),
     year: Joi.string().length(4).required(),
-    description: Joi.string().min(2).max(250).required(),
+    description: Joi.string().min(2).max(1500).required(),
     image: Joi.string().regex(REGEX).required(),
     trailerLink: Joi.string().regex(REGEX).required(),
     thumbnail: Joi.string().regex(REGEX).required(),
-    nameRU: Joi.string().min(2).max(30).required(),
-    nameEN: Joi.string().min(2).max(30).required(),
+    nameRU: Joi.string().min(2).max(350).required(),
+    nameEN: Joi.string().min(2).max(350).required(),
   }),
 });
 

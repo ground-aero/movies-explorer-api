@@ -17,6 +17,7 @@ const auth = (req, res, next) => {
 
   /** достать jwt из хедера authorization, удалить Bearer из загол */
   const token = authorization.replace('Bearer ', '');
+  console.log(token)
   // const token = authorization.split('Bearer ')[1];
   let payload;
 
@@ -25,7 +26,9 @@ const auth = (req, res, next) => {
   try {
     /** Токен верифицирован, пейлоуд извлечён.
      * проверить что jwt валидный с помощью библ jsonwebtoken */
+    // console.log(jsonwebtoken)
     payload = jsonwebtoken.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+    console.log(payload)
   } catch (error) {
     throw new AuthoErr('передан неверный логин или пароль -');
   }
